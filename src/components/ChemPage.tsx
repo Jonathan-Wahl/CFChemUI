@@ -20,7 +20,10 @@ export default function ChemPage(props: { result: object, setChem: Dispatch<SetS
                         className="text-secondary-100 bg-secondary rounded-full text-sm px-2 py-1">{props.result.moa}</span>
                 </header>
                 <section className="py-2">
-                    <span className="text-xl">{props.result.smiles}</span>
+                    <span className="text-xl"><b>SMILES: </b>{props.result.smiles}</span>
+                </section>
+                <section className="py-2">
+                    <span className="text-xl"><b>Targets: </b>{props.result.target}</span>
                 </section>
                 <section>
                     <MoleculeStructure
