@@ -1,10 +1,20 @@
-import {Dispatch, SetStateAction} from "react";
+import {Dispatch, SetStateAction, useEffect} from "react";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import MoleculeStructure from "./MoleculeStructure.tsx";
 
 
+
 export default function ChemPage(props: { result: object, setChem: Dispatch<SetStateAction<any>> }) {
+    const sourcesMapping = {
+        "idg": "IDG",
+        "drugcentral": "DrugCentral",
+        "refmet": "RefMet",
+        "lincs": "LINCS",
+        "reprotox": "Reprotox",
+        "glygen": "GlyGen",
+        // Add more mappings here as needed
+    };
     return (
         <div id="chem-page" className="relative z-10">
             <button onClick={() => {
@@ -25,6 +35,15 @@ export default function ChemPage(props: { result: object, setChem: Dispatch<SetS
                 <section className="py-2">
                     <span className="text-xl"><b>Targets: </b>{props.result.target}</span>
                 </section>
+                <div>
+                    <span className="text-xl"><b>Sources: </b></span>
+                    <span>
+                    {Object.keys(props.result.sources)
+                        .filter(key => props.result.sources[key] === true)
+                        .map(key => sourcesMapping[key] || key) // Use the mapping if available, otherwise use the original key
+                        .join(', ')}
+                    </span>
+                </div>
                 <section>
                     <MoleculeStructure
                         id="smile-svg"
