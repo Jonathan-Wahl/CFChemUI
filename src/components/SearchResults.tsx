@@ -4,9 +4,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleNodes, faCircleNotch} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
-async function fetchSearchResults(inputVal: string) {
-    const apiUrl = `http://localhost:8000/api/v1/search/`;
-
+async function fetchSearchResults(inputVal: string, include_sources: boolean) {
+    const apiUrl = include_sources ? `http://localhost:8000/api/v1/search/{include_sources}` : `http://localhost:8000/api/v1/search`;
+    console.log(apiUrl);
     return await axios.get(apiUrl, {
         params: {
             query: inputVal
@@ -31,7 +31,7 @@ export default function SearchResults({ setChem }: { setChem: Dispatch<SetStateA
             if (searchInput && searchInput.length) {
                 setLoader(true);
 
-                const data = await fetchSearchResults(searchInput);
+                const data = await fetchSearchResults(searchInput, false);
 
                 if (data.length) {
                     setSearchResults(data);
@@ -99,7 +99,16 @@ export default function SearchResults({ setChem }: { setChem: Dispatch<SetStateA
                                         title: "text-lg transition-colors",
                                         description: "text-sm transition-colors"
                                     }}
-                                    onClick={() => {setChem(result)}}
+                                    onClick={() => {
+                                        const fetchData = async () => {
+                                            // Fetch data here...
+                                            setLoader(true);
+                                            const data = await fetchSearchResults(result.pert_name, true);
+                                            setLoader(false);
+                                            setChem(data[0]);
+                                          };
+                                          fetchData();
+                                    }}
                                 >
                                     {result.pert_name}
                                 </ListboxItem>
